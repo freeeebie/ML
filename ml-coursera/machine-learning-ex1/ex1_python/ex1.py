@@ -2,6 +2,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from pylab import *
+from mpl_toolkits.mplot3d import Axes3D
 
 def warmUpExercise():
 	A = np.eye(5)
@@ -83,44 +85,51 @@ plt.plot(X[:,1], np.dot(X,theta), '-')
 plt.draw()
 plt.pause(10.001)
 
-# % Predict values for population sizes of 35,000 and 70,000
-# predict1 = [1, 3.5] *theta;
-# fprintf('For population = 35,000, we predict a profit of %f\n',...
-#     predict1*10000);
-# predict2 = [1, 7] * theta;
-# fprintf('For population = 70,000, we predict a profit of %f\n',...
-#     predict2*10000);
-
-# fprintf('Program paused. Press enter to continue.\n');
-# pause;
-
-# %% ============= Part 4: Visualizing J(theta_0, theta_1) =============
-# fprintf('Visualizing J(theta_0, theta_1) ...\n')
-
-# % Grid over which we will calculate J
-# theta0_vals = linspace(-10, 10, 100);
-# theta1_vals = linspace(-1, 4, 100);
-
-# % initialize J_vals to a matrix of 0's
-# J_vals = zeros(length(theta0_vals), length(theta1_vals));
-
-# % Fill out J_vals
-# for i = 1:length(theta0_vals)
-#     for j = 1:length(theta1_vals)
-# 	  t = [theta0_vals(i); theta1_vals(j)];
-# 	  J_vals(i,j) = computeCost(X, y, t);
-#     end
-# end
+# Predict values for population sizes of 35,000 and 70,000
+predict1 = np.dot([1, 3.5] , theta );
+print('For population = 35,000, we predict a profit of %f\n', (predict1*10000)[0])
+predict2 = np.dot([1, 7] , theta)
+print('For population = 70,000, we predict a profit of %f\n',  (predict2*10000)[0])
 
 
-# % Because of the way meshgrids work in the surf command, we need to
-# % transpose J_vals before calling surf, or else the axes will be flipped
-# J_vals = J_vals';
-# % Surface plot
+# ============= Part 4: Visualizing J(theta_0, theta_1) =============
+print('Visualizing J(theta_0, theta_1) ...')
+
+# Grid over which we will calculate J
+theta0_vals = linspace(-10, 10, 100);
+theta1_vals = linspace(-1, 4, 100);
+
+# initialize J_vals to a matrix of 0's
+J_vals = zeros((len(theta0_vals), len(theta1_vals)));
+
+# Fill out J_vals
+for i in range (len(theta0_vals)):
+	for j in range (len(theta1_vals)):
+		t = np.array([[theta0_vals[i]], [theta1_vals[j]]])
+		J_vals[i][j] = computeCost(X, y, t);
+
+
+# Because of the way meshgrids work in the surf command, we need to
+# transpose J_vals before calling surf, or else the axes will be flipped
+J_vals = J_vals.transpose();
+# Surface plot
 # figure;
 # surf(theta0_vals, theta1_vals, J_vals)
 # xlabel('\theta_0'); ylabel('\theta_1');
 
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+x = y = np.arange(-3.0, 3.0, 0.05)
+X, Y = np.meshgrid(x, y)
+# zs = np.array([fun(x,y) for x,y in zip(np.ravel(X), np.ravel(Y))])
+# Z = zs.reshape(X.shape)
+
+ax.plot_surface(theta0_vals, theta1_vals, J_vals)
+
+ax.set_xlabel('theta_0')
+ax.set_ylabel('theta_1')
+ax.set_zlabel('Z Label')
+plt.show()
 # % Contour plot
 # figure;
 # % Plot J_vals as 15 contours spaced logarithmically between 0.01 and 100
